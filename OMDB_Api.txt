@@ -1,0 +1,21 @@
+import requests_with_caching
+import json
+
+def get_movie_data(stri):
+    base_url = "http://www.omdbapi.com/"
+    param = {'t':stri,'r':'json'}
+    respon = requests_with_caching.get(base_url, params = param)
+    #print(respon.url)
+    return json.loads(respon.text)
+def get_movie_rating(dicti):
+    ans = 0
+    n_lst = dicti['Ratings']
+    for el in n_lst :
+        if el['Source'] == 'Rotten Tomatoes' :
+            ans = el['Value']
+            break
+    return int(str(ans).replace('%',''))
+# some invocations that we use in the automated tests; uncomment these if you are getting errors and want better error messages
+# get_movie_rating(get_movie_data("Deadpool 2"))
+
+# It takes an OMDB dictionary result for one movie and extracts the Rotten Tomatoes rating as an integer. For example, if given the OMDB dictionary for “Black Panther”, it returns 97. If there is no Rotten Tomatoes rating, returns 0.
